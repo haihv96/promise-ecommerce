@@ -1,12 +1,25 @@
 version: '2'
 services:
+  app:
+    build: docker_images/php
+    ports:
+      - 81:80
+    volumes:
+      - ./:/var/www/html
+      - ./docker_images/php/httpd.conf:/etc/apache2/sites-available/000-default.conf
+#    command:
+#      - ./docker_images/php/onrun.sh
+    links:
+      - mysql:mysql
+    networks:
+      - default
   mysql:
     build: docker_images/mysql
     environment:
-      MYSQL_DATABASE: test
-      MYSQL_USER: test
-      MYSQL_PASSWORD: test
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ecommerce
+      MYSQL_USER: promise_team
+      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: 123456
     ports:
       - 3307:3306
     volumes:
@@ -22,16 +35,4 @@ services:
       - mysql:mysql
     depends_on:
       - mysql
-  php:
-    build: docker_images/php
-    ports:
-      - 81:80
-    volumes:
-      - ./:/var/www/html
-      - ./docker_images/php/httpd.conf:/etc/apache2/sites-available/000-default.conf
-#    command:
-#      - ./docker_images/php/onrun.sh
-    links:
-      - mysql:mysql
-    networks:
-      - default
+
